@@ -1,0 +1,16 @@
+# Telegram bot framework
+aiogram==3.12.0
+
+# Django framework for admin panel
+django==4.2.6
+
+# PostgreSQL database adapter for Django
+psycopg2-binary==2.9.7
+
+# Docker integration (if using Docker commands directly)
+docker-compose==1.29.2
+
+logger
+
+python==3.10
+

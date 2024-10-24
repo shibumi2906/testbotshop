@@ -1,0 +1,14 @@
+# Django framework for admin_panel
+django==4.2.6
+
+# PostgreSQL database adapter for Django
+psycopg2-binary==2.9.7
+
+# Docker integration for using Docker commands directly
+docker-compose==1.29.2
+
+# Image processing (for handling images in Django)
+Pillow
+
+# REST API framework (optional, if you plan to create APIs)
+djangorestframework
