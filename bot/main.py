@@ -1,42 +1,41 @@
 import asyncio
-import logging
+from loguru import logger
 import os
-from aiogram import Bot, Dispatcher, Router, types
+from aiogram import Bot, Dispatcher, Router
 from aiogram.filters import CommandStart
-from aiogram.types import Message
-from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove
+from aiogram.types import Message, ReplyKeyboardRemove
+from dotenv import load_dotenv
+from bot.handlers.start import register_start_handler
 
-# Load the token from environment variables or replace with your token.
-API_TOKEN = os.getenv("TELEGRAM_API_TOKEN", "YOUR_API_TOKEN")
+# Загрузка переменных окружения из файла .env
+load_dotenv()
+API_TOKEN = os.getenv("TELEGRAM_API_TOKEN")
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Проверка, что токен был загружен
+if not API_TOKEN:
+    logger.error("TELEGRAM_API_TOKEN не найден. Проверьте файл .env.")
+    raise ValueError("TELEGRAM_API_TOKEN не найден. Проверьте файл .env.")
 
-# Initialize the bot and dispatcher
+# Настройка логирования Loguru
+logger.add("bot_log.log", format="{time} {level} {message}", level="INFO")
+
+# Инициализация бота и диспетчера
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
 
-# Create a Router for organizing handlers
-router = Router()
+# Регистрация обработчиков
+register_start_handler(dp)
 
-# Define a handler for the /start command
-@router.message(CommandStart())
-async def start_command(message: Message) -> None:
-    await message.answer("Привет! Я ваш бот. Чем могу помочь?", reply_markup=ReplyKeyboardRemove())
-
-# Define a handler for text messages
-@router.message()
-async def echo_message(message: Message) -> None:
-    await message.answer(message.text)
-
-# Register the router with the dispatcher
-dp.include_router(router)
-
-# Run the bot
+# Основная функция запуска бота
 async def main() -> None:
-    logger.info("Starting bot...")
-    await dp.start_polling(bot)
+    logger.info("Запуск бота...")
+    try:
+        await dp.start_polling(bot)
+    except Exception as e:
+        logger.exception(f"Ошибка при запуске бота: {e}")
 
+# Запуск бота
 if __name__ == "__main__":
+    logger.info("Инициализация...")
     asyncio.run(main())
+
