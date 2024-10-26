@@ -51,7 +51,7 @@ async def send_welcome(message: types.Message, bot: Bot):
     # Приветственное сообщение и меню, независимо от подписки
     logger.info(f"Пользователь {message.from_user.id} получил доступ к меню.")
     await message.answer(
-        "Привет! Я ваш бот. Чем могу помочь?",
+        "Привет! Я ваш бот. Выберете в меню ниже нужное",
         reply_markup=get_main_menu_buttons()
     )
 
